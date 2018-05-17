@@ -38,13 +38,13 @@ public class TestSmali {
     private  static  ArrayList<Integer> rededOrders = new ArrayList<Integer>();
     private static ArrayList<QuareOrderFiltrateResponse.OrdersBean> allOrder = new ArrayList<QuareOrderFiltrateResponse.OrdersBean>();
     private static HashMap<QuareOrderFiltrateResponse.OrdersBean,PageFragment> allPage = new HashMap<QuareOrderFiltrateResponse.OrdersBean,PageFragment>();
-   // private static int queryCounter = 5;
+    // private static int queryCounter = 5;
 
     private static PageFragment lastFragment;
 
-  //  private static ScheduledThreadPoolExecutor pool;
+    //  private static ScheduledThreadPoolExecutor pool;
 
-    private static int delayInterval = 1500;
+    private static int delayInterval = 100;
 
     public static void DetailClose(MenuItem close)
     {
@@ -52,7 +52,7 @@ public class TestSmali {
         if(detailClose == null && close != null)
             detailClose = close;
 
-       // LogStr((detailClose == null)+"xcsd");
+        // LogStr((detailClose == null)+"xcsd");
 
         boolean autoRequest = false;
 
@@ -69,8 +69,8 @@ public class TestSmali {
 
         if(beanUnRed != null)
         {
-           // int orderIndex = allOrder.size() -1;
-           // beanUnRed = allOrder.get(orderIndex);
+            // int orderIndex = allOrder.size() -1;
+            // beanUnRed = allOrder.get(orderIndex);
             lastFragment = allPage.get(beanUnRed);
             if(lastFragment != null )
             {
@@ -88,7 +88,7 @@ public class TestSmali {
 
                 allOrder.remove(beanUnRed);
                 allPage.remove(beanUnRed);
-               // queryCounter --;
+                // queryCounter --;
                 LogStr("自动检查下一个订单 ：" +beanUnRed.getUserDesc() +" size : " +allOrder.size());
             }else
                 autoRequest = true;
@@ -98,21 +98,9 @@ public class TestSmali {
 
         if(autoRequest)
         {
-           // LogStr("列表检查完毕，Helper ：" + (_networkHelper == null) +" requestMap : " +(requestMap == null));
+            // LogStr("列表检查完毕，Helper ：" + (_networkHelper == null) +" requestMap : " +(requestMap == null));
             if(_networkHelper != null && requestMap != null)
             {
-             /*   pool = new ScheduledThreadPoolExecutor(1);
-               pool.schedule(
-                       new Runnable() {
-                           public void run()
-                           {
-
-                           }
-                       }
-                       , 1000, TimeUnit.MILLISECONDS);
-
-                pool.shutdown();*/
-
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
                         lastFragment.a();
@@ -121,7 +109,7 @@ public class TestSmali {
                         startAgent = true;
                         LogStr("自动发送获取新订单消息" );
                     }
-                }, delayInterval-600);
+                }, delayInterval);
             }
         }
     }
@@ -130,7 +118,7 @@ public class TestSmali {
     private static  boolean IsLock(){
         SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
         Date curDate =  new Date(System.currentTimeMillis());
-        Date lockData =  new Date(2018,5,1);
+        Date lockData =  new Date(2018,5,17);
 
         return  lockData.getTime() < curDate.getTime();
     }
@@ -138,13 +126,13 @@ public class TestSmali {
     //com/huijiemanager/ui/fragment/PageFragment$f
     public static  void RecvicePublicBean(PageFragment page, QuareOrderFiltrateResponse.OrdersBean bean)
     {
-     /*   if(IsLock())
+        if(IsLock())
         {
             LogStr("Locking");
             return;
-        }*/
+        }
 
-      if(!startAgent)
+        if(!startAgent)
         {
             if(!allOrder.contains(bean))
                 allOrder.add(bean);
@@ -155,47 +143,32 @@ public class TestSmali {
          /*   Comparator<QuareOrderFiltrateResponse.OrdersBean> comparator = new OrderComparator();
             Collections.sort(allOrder,comparator);*/
 
-          //  LogStr("NickName : "+ bean.getUserDesc()+" Create time : " +bean.getCreateTime() +" Order Count :" + allOrder.size());
-       }else
-      {
-          lastFragment = page;
-          if(!rededOrders.contains(bean.getId()))
-              rededOrders.add(bean.getId());
+            //  LogStr("NickName : "+ bean.getUserDesc()+" Create time : " +bean.getCreateTime() +" Order Count :" + allOrder.size());
+        }else
+        {
+            lastFragment = page;
+            if(!rededOrders.contains(bean.getId()))
+                rededOrders.add(bean.getId());
 
-          startAgent = false;
-          StringBuilder parmeras = new StringBuilder();
-          parmeras.append(bean.getId());
-          parmeras.append("");
+            startAgent = false;
+            StringBuilder parmeras = new StringBuilder();
+            parmeras.append(bean.getId());
+            parmeras.append("");
 
-          String parmera = parmeras.toString();
+            String parmera = parmeras.toString();
 
-          Intent intent = new Intent(page.getContext(),PublicDetailActivity.class);
-          intent.putExtra("id",parmera);
+            Intent intent = new Intent(page.getContext(),PublicDetailActivity.class);
+            intent.putExtra("id",parmera);
 
-          page.startActivityForResult(intent,0);
+            page.startActivityForResult(intent,0);
 
-          LogStr("开始检查第一个订单 ：" +bean.getUserDesc());
-      }
+            LogStr("开始检查第一个订单 ：" +bean.getUserDesc());
+        }
     }
 
 
     private static void AutoCloseDetail()
     {
-      /*  pool = new ScheduledThreadPoolExecutor(1);
-        pool.schedule(
-                new Runnable() {
-                    public void run()
-                    {
-                        currentDetail.onOptionsItemSelected(detailClose);
-
-                        Runtime.getRuntime().gc();
-                        System.runFinalization();
-                    }
-                }
-                , 1000, TimeUnit.MILLISECONDS);
-
-        pool.shutdown();*/
-
         new Handler().postDelayed(new Runnable(){
             public void run() {
                 currentDetail.onOptionsItemSelected(detailClose);
@@ -214,12 +187,8 @@ public class TestSmali {
 
         boolean[] allCondition = new boolean[]{false, false,false,false,false, false};
         //[微粒贷，社保，住房公积金，公务员,打卡工资3000以上,信用良好]
-        /*
-有微粒贷，公务员有社保公积金，打卡工资3000以上
-贵阳地区
-贷款需求3W以上
-        * */
-       // boolean forward =detailData.city.contains("贵阳");   //地区过滤
+
+        boolean forward =detailData.city.contains("上海");   //地区过滤
         /*if(forward)  //贷款金额过滤
         {
             if(detailData.loan_amount.contains("万"))
@@ -229,47 +198,55 @@ public class TestSmali {
         }*/  //贷款金额筛选条件主动过滤
 
         //年龄过滤
-       /* if(forward)
-            forward = Integer.parseInt(detailData.age) >= 22;*/
-
-        if (detailData.can_collect.equals("1") && detailData.can_monopoly /*&& forward*/)
+        if(forward)
         {
-            for (MyInforCreditResponse response  :detailData.user_info_list) {
+            int ageVal = Integer.parseInt(detailData.age);
+            forward =  ageVal < 55 && ageVal > 25 ;
+        }
 
-               // LogStr(response.getP_name()) ;
-                if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
-                    allCondition[3] = true;
 
-                for (MyInforCreditResponse.InforDetail info:response.getC_list()) {
+        if (detailData.can_collect.equals("1") && detailData.can_monopoly && forward)
+        {
+
+             allCondition[0] =true;          // for (MyInforCreditResponse response  :detailData.user_info_list) {
+
+            // LogStr(response.getP_name()) ;
+           /*     if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
+                    allCondition[3] = true;*/
+
+             /*   for (MyInforCreditResponse.InforDetail info:response.getC_list()) {
 
                     if(info.getC_name().contains("微粒贷") && !info.getC_value().contains("无"))
                     {
-                       // LogStr("微粒贷额度 : " + info.getC_value());
-                        String saylaStr = info.getC_value();
+                        *//*String saylaStr = info.getC_value();
                         if(saylaStr.contains("元"))
                             saylaStr= saylaStr.replace("元","");
                         int sayla = Integer.valueOf(saylaStr);
-                        if(sayla >= 3000)
+                        // LogStr("微粒贷额度 : " + sayla + " => " +(sayla >= 3000));
+                        if(sayla >= 30000)*//*
                             allCondition[0] = true;
-                    }
+                    }*/
 
-                    if(info.getC_name().equals("本地社保") && !info.getC_value().contains("无"))
+          /*          if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
                         allCondition[1] = true;
 
-                    if(info.getC_name().equals("本地公积金") && !info.getC_value().contains("无"))
+                    if(info.getC_name().equals("本地公积金") && info.getC_value().contains("连续6个月"))
                         allCondition[2] = true;
+*/
+          /*          if(info.getC_name().equals("公积金基数"))
+                    {
+                        String numVal = info.getC_value().replace("元","");
+                        int baseNum = Integer.parseInt(numVal);
+                        if(baseNum >= 3500)
+                            allCondition[3] = true;
+                    }*/
 
-                    if(info.getC_name().equals("收入形式") && info.getC_value().equals("银行代发"))
-                        allCondition[4] = true;
+//                    if(info.getC_name().equals("收入形式") && info.getC_value().equals("银行代发"))
+//                        allCondition[4] = true;
 
-                    //月收入 : 4500元 贷款金额筛选条件主动过滤
-                   /* if(info.getC_name().equals("月收入"))
-                        allCondition[4] = Integer.parseInt(info.getC_value().replace("元","")) >= 3000;*/
-                   // allCondition[4] = true;
-
-                    //信用记录 : 信用良好，无逾期
-                    if(info.getC_name().equals("信用记录") && (info.getC_value().equals("信用良好，无逾期") ||info.getC_value().equals("1年内逾期少于3次且少于90天")))
-                        allCondition[5] = true;
+            //信用记录 : 信用良好，无逾期
+      /*              if(info.getC_name().equals("信用记录") && info.getC_value().equals("信用良好，无逾期"))
+                        allCondition[5] = true;*/
 
               /*      LogStr(info.getC_name() +" : " +info.getC_value());
 
@@ -286,10 +263,10 @@ public class TestSmali {
                             LogStr(hd.getKey() +" : " +hd.getValue());
                         }
                     }*/
-                }
-            }
+            // }
+            //    }
 
-            if(allCondition[0]|| ((allCondition[3]&&allCondition[4]&&allCondition[5]) && (allCondition[1]||allCondition[2])))
+            if(allCondition[0])
             {                //满足所有条件，自动买断
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
@@ -303,7 +280,7 @@ public class TestSmali {
                         com.huijiemanager.utils.k.a("xdj_loan_order_detail", paramView);
                         currentDetail.ac.sendBuyLoanOrderFirstRequest(currentDetail.getNetworkHelper(), currentDetail, currentData.id, 1);
                     }
-                }, delayInterval-500);
+                }, delayInterval);
             }  else
             {
                 if(detailClose == null || currentDetail == null)
@@ -357,12 +334,13 @@ public class TestSmali {
                 currentDetail.d.operationActivityId, currentDetail.B);
 
         LogStr("发送确认抢单消息");
+
+        if(detailClose != null || currentDetail != null)
+            AutoCloseDetail();
     }
 
     public  static void SuccessClose(PublicDetailActivity detailActivitys)
     {
-        //currentDetail = detailActivitys;
-
         if(detailClose == null || currentDetail == null)
             return;
 

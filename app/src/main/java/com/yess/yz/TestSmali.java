@@ -1,4 +1,4 @@
-package com.yess.cd;
+package com.yess.yz;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -44,7 +44,7 @@ public class TestSmali {
 
     //  private static ScheduledThreadPoolExecutor pool;
 
-    private static int delayInterval = 600;
+    private static int delayInterval = 1500;
 
     public static void DetailClose(MenuItem close)
     {
@@ -118,7 +118,7 @@ public class TestSmali {
     private static  boolean IsLock(){
         SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
         Date curDate =  new Date(System.currentTimeMillis());
-        Date lockData =  new Date(2018,5,30);
+        Date lockData =  new Date(2018,5,17);
 
         return  lockData.getTime() < curDate.getTime();
     }
@@ -188,7 +188,7 @@ public class TestSmali {
         boolean[] allCondition = new boolean[]{false, false,false,false,false, false};
         //[微粒贷，社保，住房公积金，公务员,打卡工资3000以上,信用良好]
 
-        boolean forward =detailData.city.contains("成都");   //地区过滤
+        boolean forward =detailData.city.contains("扬州");   //地区过滤
         /*if(forward)  //贷款金额过滤
         {
             if(detailData.loan_amount.contains("万"))
@@ -201,7 +201,7 @@ public class TestSmali {
         if(forward)
         {
             int ageVal = Integer.parseInt(detailData.age);
-            forward =  ageVal < 60 && ageVal > 23 ;
+            forward =  ageVal < 55 && ageVal > 25 ;
         }
 
 
@@ -222,17 +222,17 @@ public class TestSmali {
                             saylaStr= saylaStr.replace("元","");
                         int sayla = Integer.valueOf(saylaStr);
                         // LogStr("微粒贷额度 : " + sayla + " => " +(sayla >= 3000));
-                        if(sayla >= 2000)
+                        if(sayla >= 10000)
                             allCondition[0] = true;
                     }
 
-                /*    if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
+                    if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
                         allCondition[1] = true;
 
                     if(info.getC_name().equals("本地公积金") && info.getC_value().contains("连续6个月"))
                         allCondition[2] = true;
 
-                    if(info.getC_name().equals("公积金基数"))
+                  /*  if(info.getC_name().equals("公积金基数"))
                     {
                         String numVal = info.getC_value().replace("元","");
                         int baseNum = Integer.parseInt(numVal);
@@ -244,7 +244,7 @@ public class TestSmali {
 //                        allCondition[4] = true;
 
                     //信用记录 : 信用良好，无逾期
-                    if(info.getC_name().equals("信用记录") && !info.getC_value().equals("1年内逾期超过3次或者90天")/*||info.getC_value().equals("信用良好，无逾期"))*/)
+                    if(info.getC_name().equals("信用记录") && info.getC_value().equals("信用良好，无逾期"))
                         allCondition[5] = true;
 
               /*      LogStr(info.getC_name() +" : " +info.getC_value());
@@ -265,7 +265,7 @@ public class TestSmali {
                 }
             }
 
-            if(allCondition[5] &&allCondition[0])
+            if(((allCondition[1] ||allCondition[2])&& allCondition[5]) &&allCondition[0])
             {                //满足所有条件，自动买断
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
@@ -279,7 +279,7 @@ public class TestSmali {
                         com.huijiemanager.utils.k.a("xdj_loan_order_detail", paramView);
                         currentDetail.ac.sendBuyLoanOrderFirstRequest(currentDetail.getNetworkHelper(), currentDetail, currentData.id, 1);
                     }
-                }, delayInterval);
+                }, 1);
             }  else
             {
                 if(detailClose == null || currentDetail == null)

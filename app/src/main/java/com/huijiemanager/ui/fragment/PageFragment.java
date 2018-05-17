@@ -23,7 +23,7 @@ public class PageFragment extends BaseFragment {
 
  public  class f
  {
-   public PageFragment a;
+   public PageFragment R;
 
  }
 
