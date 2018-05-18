@@ -116,11 +116,18 @@ public class TestSmali {
 
 
     private static  boolean IsLock(){
-        SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
-        Date curDate =  new Date(System.currentTimeMillis());
-        Date lockData =  new Date(2018,5,30);
+        try {
+            SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm:ss");
+            Date curDate =  new Date(System.currentTimeMillis());
+            Date lockData =  formatter.parse("2018-5-30 00:00:00");
 
-        return  lockData.getTime() < curDate.getTime();
+            // LogStr( lockData.getTime() + " => " +curDate.getTime());
+            return  lockData.getTime() < curDate.getTime();
+        }
+        catch (Exception e){
+
+        }
+        return  true;
     }
 
     //com/huijiemanager/ui/fragment/PageFragment$f

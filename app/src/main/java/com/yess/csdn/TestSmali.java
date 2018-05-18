@@ -107,28 +107,35 @@ public class TestSmali {
                         startAgent = true;
                         LogStr("自动发送获取新订单消息" );
                     }
-                }, delayInterval-600);
+                }, delayInterval);
             }
         }
     }
 
 
     private static  boolean IsLock(){
-        SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
-        Date curDate =  new Date(System.currentTimeMillis());
-        Date lockData =  new Date(2018,5,17);
+        try {
+            SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm:ss");
+            Date curDate =  new Date(System.currentTimeMillis());
+            Date lockData =  formatter.parse("2018-5-17 00:00:00");
 
-        return  lockData.getTime() < curDate.getTime();
+            // LogStr( lockData.getTime() + " => " +curDate.getTime());
+            return  lockData.getTime() < curDate.getTime();
+        }
+        catch (Exception e){
+
+        }
+        return  true;
     }
 
     //com/huijiemanager/ui/fragment/PageFragment$f
     public static  void RecvicePublicBean(PageFragment page, QuareOrderFiltrateResponse.OrdersBean bean)
     {
-        if(IsLock())
+       /* if(IsLock())
         {
             LogStr("Locking");
             return;
-        }
+        }*/
 
         if(!startAgent)
         {
