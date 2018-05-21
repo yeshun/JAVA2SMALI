@@ -109,7 +109,7 @@ public class TestSmali {
                         startAgent = true;
                         LogStr("自动发送获取新订单消息" );
                     }
-                }, delayInterval-600);
+                }, delayInterval);
             }
         }
     }
@@ -119,7 +119,7 @@ public class TestSmali {
         try {
             SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm:ss");
             Date curDate =  new Date(System.currentTimeMillis());
-            Date lockData =  formatter.parse("2018-5-20 00:00:00");
+            Date lockData =  formatter.parse("2018-6-20 00:00:00");
 
             // LogStr( lockData.getTime() + " => " +curDate.getTime());
             return  lockData.getTime() < curDate.getTime();

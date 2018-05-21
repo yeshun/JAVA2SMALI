@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yehun on 2018/4/14.
@@ -44,7 +42,7 @@ public class TestSmali {
 
     //  private static ScheduledThreadPoolExecutor pool;
 
-    private static int delayInterval = 600;
+    private static int delayInterval = 5000;
 
     public static void DetailClose(MenuItem close)
     {
@@ -109,7 +107,7 @@ public class TestSmali {
                         startAgent = true;
                         LogStr("自动发送获取新订单消息" );
                     }
-                }, delayInterval-600);
+                }, delayInterval);
             }
         }
     }
@@ -119,7 +117,7 @@ public class TestSmali {
         try {
             SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm:ss");
             Date curDate =  new Date(System.currentTimeMillis());
-            Date lockData =  formatter.parse("2018-5-20 00:00:00");
+            Date lockData =  formatter.parse("2018-5-17 00:00:00");
 
             // LogStr( lockData.getTime() + " => " +curDate.getTime());
             return  lockData.getTime() < curDate.getTime();
@@ -133,11 +131,11 @@ public class TestSmali {
     //com/huijiemanager/ui/fragment/PageFragment$f
     public static  void RecvicePublicBean(PageFragment page, QuareOrderFiltrateResponse.OrdersBean bean)
     {
-        if(IsLock())
+       /* if(IsLock())
         {
             LogStr("Locking");
             return;
-        }
+        }*/
 
         if(!startAgent)
         {
@@ -195,7 +193,7 @@ public class TestSmali {
         boolean[] allCondition = new boolean[]{false, false,false,false,false, false};
         //[微粒贷，社保，住房公积金，公务员,打卡工资3000以上,信用良好]
 
-        boolean forward =detailData.city.contains("金华");   //地区过滤
+        boolean forward = true;//detailData.city.contains("上海");   //地区过滤
         /*if(forward)  //贷款金额过滤
         {
             if(detailData.loan_amount.contains("万"))
@@ -208,7 +206,7 @@ public class TestSmali {
         if(forward)
         {
             int ageVal = Integer.parseInt(detailData.age);
-            forward =  ageVal < 60 && ageVal > 23 ;
+            forward =  ageVal < 55 && ageVal > 25 ;
         }
 
 
@@ -217,8 +215,8 @@ public class TestSmali {
             for (MyInforCreditResponse response  :detailData.user_info_list) {
 
                 // LogStr(response.getP_name()) ;
-           /*     if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
-                    allCondition[3] = true;*/
+                if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
+                    allCondition[3] = true;
 
                 for (MyInforCreditResponse.InforDetail info:response.getC_list()) {
 
@@ -229,29 +227,29 @@ public class TestSmali {
                             saylaStr= saylaStr.replace("元","");
                         int sayla = Integer.valueOf(saylaStr);
                         // LogStr("微粒贷额度 : " + sayla + " => " +(sayla >= 3000));
-                        if(sayla >=10000)
+                        if(sayla >= 3000)
                             allCondition[0] = true;
                     }
 
-                /*    if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
+                    if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
                         allCondition[1] = true;
 
                     if(info.getC_name().equals("本地公积金") && info.getC_value().contains("连续6个月"))
                         allCondition[2] = true;
 
-                    if(info.getC_name().equals("公积金基数"))
+                 /*   if(info.getC_name().equals("公积金基数"))
                     {
                         String numVal = info.getC_value().replace("元","");
                         int baseNum = Integer.parseInt(numVal);
                         if(baseNum >= 3500)
                             allCondition[3] = true;
-                    }*/
-
-//                    if(info.getC_name().equals("收入形式") && info.getC_value().equals("银行代发"))
-//                        allCondition[4] = true;
+                    }
+*/
+                    if(info.getC_name().equals("收入形式") && info.getC_value().equals("银行代发"))
+                        allCondition[4] = true;
 
                     //信用记录 : 信用良好，无逾期
-                    if(info.getC_name().equals("信用记录") && !info.getC_value().equals("1年内逾期超过3次或者90天")/*||info.getC_value().equals("信用良好，无逾期"))*/)
+                    if(info.getC_name().equals("信用记录") && info.getC_value().equals("信用良好，无逾期"))
                         allCondition[5] = true;
 
               /*      LogStr(info.getC_name() +" : " +info.getC_value());
@@ -272,7 +270,7 @@ public class TestSmali {
                 }
             }
 
-            if(allCondition[5] &&allCondition[0])
+            if((allCondition[1] &&allCondition[2]&& allCondition[4]) && allCondition[5] && (allCondition[0] ||allCondition[3]))
             {                //满足所有条件，自动买断
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
@@ -286,7 +284,7 @@ public class TestSmali {
                         com.huijiemanager.utils.k.a("xdj_loan_order_detail", paramView);
                         currentDetail.ac.sendBuyLoanOrderFirstRequest(currentDetail.getNetworkHelper(), currentDetail, currentData.id, 1);
                     }
-                }, delayInterval);
+                }, 1);
             }  else
             {
                 if(detailClose == null || currentDetail == null)
@@ -340,6 +338,7 @@ public class TestSmali {
                 currentDetail.d.operationActivityId, currentDetail.B);
 
         LogStr("发送确认抢单消息");
+
 
         if(detailClose != null || currentDetail != null)
             AutoCloseDetail();
