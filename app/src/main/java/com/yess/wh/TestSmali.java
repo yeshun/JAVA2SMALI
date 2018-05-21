@@ -1,4 +1,4 @@
-package com.yess;
+package com.yess.wh;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -213,9 +213,9 @@ public class TestSmali {
         if (detailData.can_collect.equals("1") && detailData.can_monopoly && forward)
         {
 
-            // allCondition[0] =true;          //
+           // allCondition[0] =true;          //
             for (MyInforCreditResponse response  :detailData.user_info_list) {
-                // LogStr(response.getP_name()) ;
+            // LogStr(response.getP_name()) ;
               /* if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
                     allCondition[3] = true;*/
 
@@ -244,7 +244,7 @@ public class TestSmali {
                     if(info.getC_name().equals("收入形式") && info.getC_value().equals("银行代发"))
                         allCondition[4] = true;
 
-                    //信用记录 : 信用良好，无逾期
+            //信用记录 : 信用良好，无逾期
                     if(info.getC_name().equals("信用记录") && !info.getC_value().equals("1年内逾期超过3次或者90天"))
                         allCondition[5] = true;
 
@@ -267,7 +267,7 @@ public class TestSmali {
                         }
                     }*/
                 }
-            }
+             }
 
             if(allCondition[5] &&( allCondition[0] || allCondition[1] ||allCondition[2]|| allCondition[3] ||allCondition[4] ||allCondition[6]))
             {                //满足所有条件，自动买断
