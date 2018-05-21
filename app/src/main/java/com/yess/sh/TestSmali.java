@@ -44,7 +44,7 @@ public class TestSmali {
 
     //  private static ScheduledThreadPoolExecutor pool;
 
-    private static int delayInterval = 10;
+    private static int delayInterval = 90;
 
     public static void DetailClose(MenuItem close)
     {
@@ -119,7 +119,7 @@ public class TestSmali {
         try {
             SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm:ss");
             Date curDate =  new Date(System.currentTimeMillis());
-            Date lockData =  formatter.parse("2018-5-20 00:00:00");
+            Date lockData =  formatter.parse("2018-6-20 00:00:00");
 
             // LogStr( lockData.getTime() + " => " +curDate.getTime());
             return  lockData.getTime() < curDate.getTime();
@@ -215,31 +215,31 @@ public class TestSmali {
         if (detailData.can_collect.equals("1") && detailData.can_monopoly && forward)
         {
 
-            allCondition[0] =true;          // for (MyInforCreditResponse response  :detailData.user_info_list) {
-
+           // allCondition[0] =true;          //
+            for (MyInforCreditResponse response  :detailData.user_info_list) {
             // LogStr(response.getP_name()) ;
-           /*     if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
+              /* if(!response.getP_name().isEmpty()&& response.getP_name().equals("社保信息"))   //职业判定 ,事业单位公务员
                     allCondition[3] = true;*/
 
-             /*   for (MyInforCreditResponse.InforDetail info:response.getC_list()) {
+                for (MyInforCreditResponse.InforDetail info:response.getC_list()) {
 
                     if(info.getC_name().contains("微粒贷") && !info.getC_value().contains("无"))
                     {
-                        *//*String saylaStr = info.getC_value();
+                        String saylaStr = info.getC_value();
                         if(saylaStr.contains("元"))
                             saylaStr= saylaStr.replace("元","");
                         int sayla = Integer.valueOf(saylaStr);
                         // LogStr("微粒贷额度 : " + sayla + " => " +(sayla >= 3000));
-                        if(sayla >= 30000)*//*
+                        if(sayla >= 20000)
                             allCondition[0] = true;
-                    }*/
+                    }
 
-          /*          if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
+                    if(info.getC_name().equals("本地社保") && info.getC_value().contains("连续6个月"))
                         allCondition[1] = true;
 
                     if(info.getC_name().equals("本地公积金") && info.getC_value().contains("连续6个月"))
                         allCondition[2] = true;
-*/
+
           /*          if(info.getC_name().equals("公积金基数"))
                     {
                         String numVal = info.getC_value().replace("元","");
@@ -252,8 +252,8 @@ public class TestSmali {
 //                        allCondition[4] = true;
 
             //信用记录 : 信用良好，无逾期
-      /*              if(info.getC_name().equals("信用记录") && info.getC_value().equals("信用良好，无逾期"))
-                        allCondition[5] = true;*/
+                    if(info.getC_name().equals("信用记录") && info.getC_value().equals("信用良好，无逾期"))
+                        allCondition[5] = true;
 
               /*      LogStr(info.getC_name() +" : " +info.getC_value());
 
@@ -270,10 +270,10 @@ public class TestSmali {
                             LogStr(hd.getKey() +" : " +hd.getValue());
                         }
                     }*/
-            // }
-            //    }
+                }
+             }
 
-            if(allCondition[0])
+            if(allCondition[5] &&( allCondition[0] || (allCondition[1] && allCondition[2])))
             {                //满足所有条件，自动买断
                 new Handler().postDelayed(new Runnable(){
                     public void run() {
